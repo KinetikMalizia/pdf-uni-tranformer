@@ -1,0 +1,113 @@
+<div class="converter-container">
+  <div class="converter-card">
+    <!-- Header -->
+    <div class="header">
+      <h1>PDF to DOCX Converter</h1>
+      <p class="subtitle">Convert your PDF files to editable Word documents - 100% in your browser</p>
+    </div>
+
+    <!-- File Upload Section -->
+    @if (!selectedFile() && !isComplete()) {
+      <div class="upload-section">
+        <label for="fileInput" class="upload-label">
+          <div class="upload-icon">📄</div>
+          <div class="upload-text">
+            <span class="upload-title">Choose a PDF file</span>
+            <span class="upload-hint">or drag and drop here</span>
+            <span class="upload-limit">Maximum file size: 25MB</span>
+          </div>
+        </label>
+        <input
+          id="fileInput"
+          type="file"
+          accept="application/pdf"
+          (change)="onFileSelected($event)"
+          class="file-input"
+        />
+      </div>
+    }
+
+    <!-- Selected File Info -->
+    @if (selectedFile() && !isProcessing() && !isComplete()) {
+      <div class="file-info">
+        <div class="file-details">
+          <div class="file-icon">📄</div>
+          <div>
+            <div class="file-name">{{ selectedFile()!.name }}</div>
+            <div class="file-size">{{ getFileSize(selectedFile()!) }}</div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button (click)="convertPdfToDocx()" class="btn btn-primary">
+            Convert to DOCX
+          </button>
+          <button (click)="startNew()" class="btn btn-secondary">
+            Cancel
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Processing State -->
+    @if (isProcessing() && progress()) {
+      <div class="processing">
+        <div class="spinner"></div>
+        <div class="processing-text">
+          <div class="processing-title">Processing PDF...</div>
+          <div class="processing-detail">
+            Page {{ progress()!.currentPage }} of {{ progress()!.totalPages }}
+          </div>
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              [style.width.%]="(progress()!.currentPage / progress()!.totalPages) * 100">
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Success State -->
+    @if (isComplete()) {
+      <div class="success">
+        <div class="success-icon">✅</div>
+        <div class="success-text">
+          <div class="success-title">Conversion Complete!</div>
+          <div class="success-detail">Your DOCX file has been downloaded.</div>
+        </div>
+        <button (click)="startNew()" class="btn btn-primary">
+          Convert Another File
+        </button>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-text">{{ errorMessage() }}</div>
+        <button (click)="startNew()" class="btn btn-secondary">
+          Try Again
+        </button>
+      </div>
+    }
+
+    <!-- Features Section -->
+    @if (!isProcessing() && !isComplete()) {
+      <div class="features">
+        <div class="feature">
+          <span class="feature-icon">🔒</span>
+          <span class="feature-text">100% Private - All processing happens in your browser</span>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">⚡</span>
+          <span class="feature-text">Fast - No server uploads or downloads</span>
+        </div>
+        <div class="feature">
+          <span class="feature-icon">🆓</span>
+          <span class="feature-text">Free - No limits, no sign-up required</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>
